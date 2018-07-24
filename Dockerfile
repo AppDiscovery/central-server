@@ -1,6 +1,11 @@
 FROM phusion/baseimage
 ENV DEBIAN_FRONTEND noninteractive
 
+#init
+RUN rm /var/lib/apt/lists/* -vf
+RUN cp /etc/apt/sources.list /etc/apt/sources_init.list
+COPY sources.list /etc/apt/sources.list
+
 # install php & apache
 RUN add-apt-repository -y ppa:ondrej/php
 RUN apt update
@@ -36,7 +41,7 @@ RUN php artisan key:generate
 RUN find /var/lib/mysql -type f -exec touch {} \; && service mysql start && php artisan migrate
 
 # install app-repo-server
-ADD https://github.com/environment-based-app-discovery-KW/app-repo-server/archive/master.tar.gz /usr/local/src/app-repo-server.tar.gz
+ADD https://github.com/Zettat123/app-repo-server/archive/master.tar.gz /usr/local/src/app-repo-server.tar.gz
 WORKDIR /usr/local/src/
 RUN tar xvfz app-repo-server.tar.gz && rm app-repo-server.tar.gz
 WORKDIR /usr/local/src/app-repo-server-master
@@ -60,10 +65,9 @@ EXPOSE 888
 EXPOSE 889
 
 # import init data
-WORKDIR /tmp
-ADD http://7xn0vy.dl1.z0.glb.clouddn.com/file-bucket-init-data-5.21.tar.gz /var/file-bucket/file-bucket-init-data.tar.gz
-WORKDIR /var/file-bucket
-RUN tar xvfz file-bucket-init-data.tar.gz && rm file-bucket-init-data.tar.gz
+WORKDIR /var
+RUN mkdir file-bucket
+RUN chmod 777 file-bucket
 
 # RUN services
 ADD docker_files/start.sh /usr/local/src/start.sh
