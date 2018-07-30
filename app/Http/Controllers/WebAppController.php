@@ -48,7 +48,7 @@ class WebAppController extends Controller
             $app_version = new \App\WebAppVersion();
             $app_version->version = $meta->version;
             $app_version->web_app_id = $app->id;
-            $app_version->logo_url = ""; //TODO
+            $app_version->logo_url = put_file(join_paths($savedir, 'icon.png'));
             $app_version->code_bundle_hash = put_file(join_paths($savedir, 'app.js'));
             $app_version->save();
         }
