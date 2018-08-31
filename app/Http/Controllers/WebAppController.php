@@ -53,19 +53,6 @@ class WebAppController extends Controller
             $app_version->save();
         }
 
-		$app_location = \App\WebAppDeploymentLocation::whereWebAppId($app->id)->first();
-        if ($app_location) {
-          \App\WebAppDeploymentLocation::whereWebAppId($app->id)->delete();
-        }
-        $app_location = new \App\WebAppDeploymentLocation();
-        $app_location->web_app_id = $app->id;
-        $app_location->latitude = $meta->location->latitude;
-        $app_location->longitude = $meta->location->longitude;
-        $app_location->radius_m = $meta->location->radius;
-        $app_location->launch_params_json = "{}";
-        $app_location->display_name = $meta->display_name;
-        $app_location->save();
-
         // 解析 dependencies
         foreach ($meta->deps as $depName => $depVersion) {
             $dep = \App\WebAppDependency::whereDependencyVersion($depVersion)->whereDependencyName($depName)->first();

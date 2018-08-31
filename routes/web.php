@@ -17,6 +17,8 @@ Route::get('/', function () {
 
 Route::group(['prefix' => 'app'], function () {
     Route::post('upload', 'WebAppController@upload');
+    Route::post('deploy', 'WebAppDeploymentLocationController@deploy');
+    Route::post('withdraw', 'WebAppDeploymentLocationController@withdraw');
 });
 
 Route::group(['prefix' => 'payment'], function () {
