@@ -15,7 +15,9 @@ class Kernel extends HttpKernel
      */
     protected $middleware = [
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        \App\Http\Middleware\EnableCrossRequestMiddleware::class,
     ];
+
 
     /**
      * The application's route middleware groups.
