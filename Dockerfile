@@ -30,6 +30,7 @@ RUN sed -ri -e "s/^upload_max_filesize.*/upload_max_filesize = ${PHP_UPLOAD_MAX_
 WORKDIR /tmp
 ADD docker_files/database/init.sql /tmp/init.sql
 RUN find /var/lib/mysql -type f -exec touch {} \; && service mysql start && mysql -u root < init.sql
+RUN usermod -d /var/lib/mysql/ mysql
 
 # install code
 COPY . /usr/local/src/central-server
@@ -42,7 +43,7 @@ RUN php artisan key:generate
 RUN find /var/lib/mysql -type f -exec touch {} \; && service mysql start && php artisan migrate
 
 # install app-repo-server
-ADD https://github.com/Zettat123/app-repo-server/archive/master.tar.gz /usr/local/src/app-repo-server.tar.gz
+ADD https://github.com/AppDiscovery/app-repo-server/archive/master.tar.gz /usr/local/src/app-repo-server.tar.gz
 WORKDIR /usr/local/src/
 RUN tar xvfz app-repo-server.tar.gz && rm app-repo-server.tar.gz
 WORKDIR /usr/local/src/app-repo-server-master
@@ -60,6 +61,7 @@ RUN ln -s /usr/local/src/app-repo-server-master/public app-repo-server
 
 ADD docker_files/apache2/ports.conf /etc/apache2/ports.conf
 ADD docker_files/apache2/site.conf /etc/apache2/sites-enabled/000-default.conf
+ADD docker_files/apache2/servername.conf /etc/apache2/conf-enabled/servername.conf
 
 # expose port
 EXPOSE 888
